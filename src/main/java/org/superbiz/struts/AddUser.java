@@ -14,67 +14,66 @@
     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
     See the License for the specific language governing permissions and
     limitations under the License.
-*/
+ */
 package org.superbiz.struts;
 
-import javax.naming.Context;
-import javax.naming.InitialContext;
-import java.util.Properties;
+import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
+@Component
 public class AddUser {
 
-    private int id;
-    private String firstName;
-    private String lastName;
-    private String errorMessage;
+	private UserService service;
 
-    public String getFirstName() {
-        return firstName;
-    }
+	public AddUser(UserService service) {
+		this.service = service;
+	}
+	private int id;
+	private String firstName;
+	private String lastName;
+	private String errorMessage;
 
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
-    }
+	public String getFirstName() {
+		return firstName;
+	}
 
-    public String getLastName() {
-        return lastName;
-    }
+	public void setFirstName(String firstName) {
+		this.firstName = firstName;
+	}
 
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
-    }
+	public String getLastName() {
+		return lastName;
+	}
 
-    public String getErrorMessage() {
-        return errorMessage;
-    }
+	public void setLastName(String lastName) {
+		this.lastName = lastName;
+	}
 
-    public void setErrorMessage(String errorMessage) {
-        this.errorMessage = errorMessage;
-    }
+	public String getErrorMessage() {
+		return errorMessage;
+	}
 
-    public int getId() {
-        return id;
-    }
+	public void setErrorMessage(String errorMessage) {
+		this.errorMessage = errorMessage;
+	}
 
-    public void setId(int id) {
-        this.id = id;
-    }
+	public int getId() {
+		return id;
+	}
 
-    public String execute() {
+	public void setId(int id) {
+		this.id = id;
+	}
 
-        try {
-            UserService service = null;
-            Properties props = new Properties();
-            props.put(Context.INITIAL_CONTEXT_FACTORY,
-                "org.apache.openejb.core.LocalInitialContextFactory");
-            Context ctx = new InitialContext(props);
-            service = (UserService) ctx.lookup("UserServiceImplLocal");
-            service.add(new User(id, firstName, lastName));
-        } catch (Exception e) {
-            this.errorMessage = e.getMessage();
-            return "failure";
-        }
+	@Transactional
+	public String execute() {
+		try {
+			service.add(new User(id, firstName, lastName));
+		} catch (Exception e) {
+			this.errorMessage = e.getMessage();
+			return "failure";
+		}
 
-        return "success";
-    }
+		return "success";
+	}
 }

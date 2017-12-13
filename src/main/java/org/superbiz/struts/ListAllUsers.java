@@ -17,56 +17,52 @@
  */
 package org.superbiz.struts;
 
-import javax.naming.Context;
-import javax.naming.InitialContext;
 import java.util.List;
-import java.util.Properties;
 
 public class ListAllUsers {
 
-    private int id;
-    private String errorMessage;
-    private List<User> users;
+	private UserService service;
 
-    public List<User> getUsers() {
-        return users;
-    }
+	public ListAllUsers(UserService service) {
+		this.service = service;
+	}
 
-    public void setUsers(List<User> users) {
-        this.users = users;
-    }
+	private int id;
+	private String errorMessage;
+	private List<User> users;
 
-    public String getErrorMessage() {
-        return errorMessage;
-    }
+	public List<User> getUsers() {
+		return users;
+	}
 
-    public void setErrorMessage(String errorMessage) {
-        this.errorMessage = errorMessage;
-    }
+	public void setUsers(List<User> users) {
+		this.users = users;
+	}
 
-    public int getId() {
-        return id;
-    }
+	public String getErrorMessage() {
+		return errorMessage;
+	}
 
-    public void setId(int id) {
-        this.id = id;
-    }
+	public void setErrorMessage(String errorMessage) {
+		this.errorMessage = errorMessage;
+	}
 
-    public String execute() {
+	public int getId() {
+		return id;
+	}
 
-        try {
-            UserService service = null;
-            Properties props = new Properties();
-            props.put(Context.INITIAL_CONTEXT_FACTORY,
-                "org.apache.openejb.core.LocalInitialContextFactory");
-            Context ctx = new InitialContext(props);
-            service = (UserService) ctx.lookup("UserServiceImplLocal");
-            this.users = service.findAll();
-        } catch (Exception e) {
-            this.errorMessage = e.getMessage();
-            return "failure";
-        }
+	public void setId(int id) {
+		this.id = id;
+	}
 
-        return "success";
-    }
+	public String execute() {
+		try {
+			this.users = service.findAll();
+		} catch (Exception e) {
+			this.errorMessage = e.getMessage();
+			return "failure";
+		}
+
+		return "success";
+	}
 }

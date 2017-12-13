@@ -17,29 +17,8 @@
 */
 package org.superbiz.struts;
 
-import java.util.List;
+import com.opensymphony.xwork2.ActionSupport;
 
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-
-import org.springframework.stereotype.Repository;
-
-@Repository
-public class UserServiceImpl implements UserService {
-
-    @PersistenceContext
-    private EntityManager manager;
-
-    public void add(User user) {
-        manager.persist(user);
-    }
-
-    public User find(long id) {
-        return manager.find(User.class, id);
-    }
-
-    public List<User> findAll() {
-        return manager.createQuery("select u from User u").getResultList();
-    }
+public class Index extends ActionSupport {
 
 }
